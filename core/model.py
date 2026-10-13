@@ -67,6 +67,30 @@ MNISTCNN = Net
 Model = Net
 
 
+def compute_layer_hashes(model_or_dict, layers=None, algo: str = "sha256"):
+    """Compute layer-by-layer cryptographic hashes for named layers."""
+    if layers is None:
+        layers = ["conv1", "conv2", "fc1", "fc2"]
+    
+    if isinstance(model_or_dict, nn.Module):
+        return {layer: model_or_dict.hash_layer(layer, algo=algo) for layer in layers}
+    elif isinstance(model_or_dict, dict):
+        hashes = {}
+        for layer in layers:
+            hasher = hashlib.new(algo)
+            for param_name in ["weight", "bias"]:
+                key = f"{layer}.{param_name}"
+                if key in model_or_dict:
+                    hasher.update(model_or_dict[key].detach().cpu().numpy().tobytes())
+            hashes[layer] = hasher.hexdigest()
+        return hashes
+    elif isinstance(model_or_dict, str):
+        sd = torch.load(model_or_dict, map_location="cpu")
+        return compute_layer_hashes(sd, layers=layers, algo=algo)
+    raise TypeError(f"Unsupported type: {type(model_or_dict)}")
+
+
+
 if __name__ == "__main__":
     model = Net()
     print("Model Architecture:")

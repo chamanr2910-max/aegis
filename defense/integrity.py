@@ -140,6 +140,7 @@ def verify_model(
         "tampered_layers": tampered_layers,
         "matched_layers": matched_layers,
         "details": details,
+        "layers": details,
     }
 
 
