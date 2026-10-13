@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# MNIST dataset cache
+core/data/
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

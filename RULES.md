@@ -1,0 +1,1 @@
+Project Rule: Keep modules modular. Do not let attack scripts overwrite the core/golden_model.pt file. All generated attack models must go into attacks/out/.
